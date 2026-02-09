@@ -303,7 +303,8 @@ userDID);
 这个脚本提供了一个完整的框架，实现了 EthereumDIDRegistry 与 ETHRegistrarController 的集成，为用户创建了一个基于 ENS 域名的 DID 身份系统。
 
 
-MonadTestnet
+## MonadTestnet
+```
 使用账户地址部署: 0x5159eA8501d3746bB07c20B5D0406bD12844D7ec
 ✅ EthereumDIDRegistry 部署成功: 0x331126eFA15446315E99c9E5368d6D0B4F8d1C9C
 ✅ ENSRegistry 部署成功: 0x35430d5DE783051f6aa2c2AD27F4D1e13aaABa2D
@@ -317,7 +318,10 @@ Setting up reverse registrar nodes...
 ✅ StablePriceOracle 部署成功: 0x24373F676723Aae467475DbF287F9d7d0F98dF81
 ✅ ETHRegistrarController 部署成功: 0x7f7a9443272ad5C1F970efaa607735D242074528
 ✅ PublicResolver 部署成功: 0x4dB465930cDda11D4C681666d0F8BbCB828ff01f
+```
 
+## monadTestnet部署合约
+```
 npx hardhat verify 0x331126eFA15446315E99c9E5368d6D0B4F8d1C9C  --network monadTestnet
 
 npx hardhat verify 0x35430d5DE783051f6aa2c2AD27F4D1e13aaABa2D  --network monadTestnet
@@ -339,9 +343,10 @@ npx hardhat verify 0x24373F676723Aae467475DbF287F9d7d0F98dF81 --constructor-args
 npx hardhat verify 0x7f7a9443272ad5C1F970efaa607735D242074528  0x5159eA8501d3746bB07c20B5D0406bD12844D7ec 0xA3a453951aefFDf598826E75950323a9b644e5Fd 0x24373F676723Aae467475DbF287F9d7d0F98dF81 600 86400 0xF70e01f57A76674728b9986f688A3327c943A88e 0x3103b1b5a9f673e1674a9c0c3cBd5e07029492B9 0x35430d5DE783051f6aa2c2AD27F4D1e13aaABa2D --network monadTestnet
 
 npx hardhat verify 0x4dB465930cDda11D4C681666d0F8BbCB828ff01f 0x35430d5DE783051f6aa2c2AD27F4D1e13aaABa2D 0xC9b733243923f284054E5AaCE757c45871a128C9 0x7f7a9443272ad5C1F970efaa607735D242074528 0xF70e01f57A76674728b9986f688A3327c943A88e --network monadTestnet
-
+```
 
 // 用户通过调用ETHRegistrarController合约注册ens域名
+monadTestnet
 // 1）调用commit函数
 commit(bytes32 commitment)，参数应该是用户生成的承诺值,需要先调用makeCommitment函数生成承诺值
 // 2）调用register函数注册一个ENS域名
@@ -387,14 +392,19 @@ secret => ens域名，用于创建commitment的密钥（防止抢注）,// 1. �
 resolver => ens域名的解析器地址，这个值可以是address(0),不为0就设置成PublicResolver合约地址
 data =>  要设置在解析器上的数据（如地址记录等）,
 reverseRecord => 是否创建反向记录（0 ：不设置反向记录; 1 ：仅设置以太坊反向记录（addr.reverse）
-; 2 ：仅设置默认反向记录（default.reverse）;3 ：同时设置两种反向记录）
+; 
+2 ：仅设置默认反向记录（default.reverse）;
+3 ：同时设置两种反向记录）
 referrer => 推荐人地址，用于奖励推荐人,用于佣金追踪,没有的话值即0x0000000000000000000000000000000000000000000000000000000000000000
-
+```
 
 // 1. 生成随机secret
+```
 const secret = ethers.randomBytes(32);
+```
 
 // 2. 构建Registration结构体
+```
 const registration = {
     label: "myname",
     owner: "0x1234567890123456789012345678901234567890",
@@ -405,28 +415,38 @@ const registration = {
     reverseRecord: 3, // 同时设置两种反向记录
     referrer: ethers.constants.HashZero // 无推荐人
 };
+```
 
 // 3. 创建commitment
+```
 const commitment = await controller.makeCommitment(registration);
+```
 
 // 4. 提交commitment
+```
 await controller.commit(commitment);
+```
 
 // 5. 等待至少minCommitmentAge秒（通常为60秒）
+```
 await new Promise(resolve => setTimeout(resolve, 60000));
+```
 
 // 6. 计算注册费用
+```
 const price = await controller.rentPrice(registration.label, registration.duration);
 const totalPrice = price.base.add(price.premium);
+```
 
 // 7. 执行注册
+```
 await controller.register(registration, { value: totalPrice });
-
+```
 
 // 先部署上面的合约
 
 // 注册ens域名
-数据
+```
 {
     label: "xhh",
     owner: "0xDfc38b97bCc82B16802e676fbB939623F9EA5b4f",
@@ -437,3 +457,4 @@ await controller.register(registration, { value: totalPrice });
     reverseRecord: 3, 
     referrer: "0x0000000000000000000000000000000000000000"
 }
+```
