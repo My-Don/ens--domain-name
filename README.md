@@ -346,7 +346,7 @@ npx hardhat verify 0x4dB465930cDda11D4C681666d0F8BbCB828ff01f 0x35430d5DE783051f
 ```
 
 // 用户通过调用ETHRegistrarController合约注册ens域名
-monadTestnet
+```
 // 1）调用commit函数
 commit(bytes32 commitment)，参数应该是用户生成的承诺值,需要先调用makeCommitment函数生成承诺值
 // 2）调用register函数注册一个ENS域名
